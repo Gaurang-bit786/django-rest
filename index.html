@@ -140,7 +140,7 @@
 
         if(id){
           $.ajax({
-            url:`http://127.0.0.1:8000/api/${id}/`,
+            url:`https://flycoder.pythonanywhere.com/api/${id}/`,
             type:"PUT",
             data:data,
             headers:{
@@ -154,7 +154,7 @@
           alert("Add")
 
           $.ajax({
-            url:"http://127.0.0.1:8000/api/",
+            url:"https://flycoder.pythonanywhere.com/api/",
             type:"POST",
             headers:{
               "Authorization":"Bearer "+localStorage.getItem('access')
@@ -180,7 +180,7 @@
 
       $(document).ready(function(){
         $.ajax({
-          url:"http://127.0.0.1:8000/api/",
+          url:"https://flycoder.pythonanywhere.com/api/",
           type:"GET",
           dataType:"json",
           headers:{
@@ -211,7 +211,7 @@
             console.log(e['status'])
             if(e['statusText']==='Unauthorized'&&e['status']===401){
               $.ajax({
-                url:"http://127.0.0.1:8000/api/token/refresh/",
+                url:"https://flycoder.pythonanywhere.com/api/token/refresh/",
                 type:"POST",
                 data:{
                   "refresh":localStorage.getItem('refresh')
@@ -229,7 +229,7 @@
       function update(e){
 
         $.ajax({
-          url:`http://127.0.0.1:8000/api/${e}/`,
+          url:`https://flycoder.pythonanywhere.com/api/${e}/`,
           type:"GET",
           headers:{
               "Authorization":"Bearer "+localStorage.getItem('access')
@@ -245,7 +245,7 @@
           error:function(e){
               if(e['statusText']==='Unauthorized'&&e['status']===401){
                 $.ajax({
-                  url:"http://127.0.0.1:8000/api/token/refresh/",
+                  url:"https://flycoder.pythonanywhere.com/api/token/refresh/",
                   type:"POST",
                   data:{
                     "refresh":localStorage.getItem('refresh')
@@ -272,7 +272,7 @@
       function delData(e){
         alert(e)
         $.ajax({
-          url:`http://127.0.0.1:8000/api/${e}/`,
+          url:`https://flycoder.pythonanywhere.com/api/${e}/`,
           type:"DELETE",
           headers:{
               "Authorization":"Bearer "+localStorage.getItem('access')
@@ -286,7 +286,7 @@
               console.log(e['status'])
               if(e['statusText']==='Unauthorized'&&e['status']===401){
                 $.ajax({
-                  url:"http://127.0.0.1:8000/api/token/refresh/",
+                  url:"https://flycoder.pythonanywhere.com/api/token/refresh/",
                   type:"POST",
                   data:{
                     "refresh":localStorage.getItem('refresh')
