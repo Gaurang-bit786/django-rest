@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Index</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script>
+      if(localStorage.getItem('access')===null){
+        window.location.href="login.html"
+      }
+    </script>
+  </head>
+  <body>
+    
+
+
+    
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Django</a>
+        <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId" aria-controls="collapsibleNavId"
+            aria-expanded="false" aria-label="Toggle navigation"></button>
+        <div class="collapse navbar-collapse" id="collapsibleNavId">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item active">
+                    <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+
+    
+
+    <div class="container-fluid mt-5">
+      <div class="row">
+        <div class="col">
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" class="btn btn-primary my-3"><i class="fa fa-plus" aria-hidden="true"> Add User</i></button>
+          <table class="table  rounded">
+            <thead class="table-dark">
+              <tr>
+                <td>Sr No</td>
+                <td>Username</td>
+                <td>Firstname</td>
+                <td>Lastname</td>
+                <td>Email</td>
+                <td>Last Login</td>
+                <td>Date Joined</td>
+                <td>Is Active</td>
+                <td>Is Staff</td>
+                <td>Action</td>
+              </tr>
+            </thead>
+            <tbody id="tbody">
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- Add User -->
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group" hidden>
+                <label for="recipient-name" class="col-form-label">id:</label>
+                <input type="text" class="form-control" id="id">
+              </div>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">Username:</label>
+                <input type="text" class="form-control" id="username">
+              </div>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">First Name:</label>
+                <input type="text" class="form-control" id="first_name">
+              </div>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">Last Name:</label>
+                <input type="text" class="form-control" id="last_name">
+              </div>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">Email:</label>
+                <input type="email" class="form-control" id="email">
+              </div>
+              <div class="form-group">
+                <button  onclick="adduser()" class="form-control btn btn-primary" id="password">Submit</button>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Send message</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    
+
+    
+    
+    <!-- Insert User -->
+
+
+    <script>
+      function adduser(){
+        var id = $('#id').val()
+        var data = {
+          "username":$('#username').val(),
+          "first_name":$('#first_name').val(),
+          "last_name":$('#last_name').val(),
+          "email":$('#email').val(),
+          "is_active": true
+        }
+
+        if(id){
+          $.ajax({
+            url:`http://127.0.0.1:8000/api/${id}/`,
+            type:"PUT",
+            data:data,
+            headers:{
+              "Authorization":"Bearer "+localStorage.getItem('access')
+            },
+            success:function(e){
+              alert(e)
+            }
+          });
+        }else{
+          alert("Add")
+
+          $.ajax({
+            url:"http://127.0.0.1:8000/api/",
+            type:"POST",
+            headers:{
+              "Authorization":"Bearer "+localStorage.getItem('access')
+            },
+            data:data,
+            success:function(e){
+              alert(e)
+            }
+          });
+        }
+        
+
+      }
+    </script>
+    <script>
+
+      $('#logout').click(function(){
+        localStorage.removeItem("access")
+        localStorage.removeItem("refresh")
+        window.location.reload()
+      })
+
+
+      $(document).ready(function(){
+        $.ajax({
+          url:"http://127.0.0.1:8000/api/",
+          type:"GET",
+          dataType:"json",
+          headers:{
+              "Authorization":"Bearer "+localStorage.getItem('access')
+            },
+          success:function(e){
+            console.log(e)
+            var output = ''
+            for(var i = 0;i<e.length;i++){
+              output += "<tr>"+
+                        "<td>"+ (i+1) +"</td>"+
+                        "<td>"+e[i]["username"]+"</td>"+
+                        "<td>"+e[i]["first_name"]+"</td>"+
+                        "<td>"+e[i]["last_name"]+"</td>"+
+                        "<td>"+e[i]["email"]+"</td>"+
+                        "<td>"+e[i]["last_login"]+"</td>"+
+                        "<td>"+e[i]["date_joined"]+"</td>"+
+                        "<td>"+e[i]["is_active"]+"</td>"+
+                        "<td>"+e[i]["is_staff"]+"</td>"+
+                        "<td> <button data-toggle='modal' data-target='#exampleModal'   onclick='update("+e[i]["id"]+")' class='btn btn-secondary'><i class='fa fa-plus-square-o' aria-hidden='true'></i></button> <button onclick='delData("+e[i]["id"]+")' class='btn btn-danger'><i class='fa fa-trash' aria-hidden='true'></i></button></td>"+
+                        "</tr>"
+            }
+            var tbody = $('#tbody')
+            tbody[0].innerHTML = output
+          },
+          error:function(e){
+            console.log(e['statusText'])
+            console.log(e['status'])
+            if(e['statusText']==='Unauthorized'&&e['status']===401){
+              $.ajax({
+                url:"http://127.0.0.1:8000/api/token/refresh/",
+                type:"POST",
+                data:{
+                  "refresh":localStorage.getItem('refresh')
+                },
+                success:function(e){
+                  console.log(e['access'])
+                    localStorage.setItem('access',e['access'])
+                }
+              })
+            }
+          }
+        })
+      })
+
+      function update(e){
+
+        $.ajax({
+          url:`http://127.0.0.1:8000/api/${e}/`,
+          type:"GET",
+          headers:{
+              "Authorization":"Bearer "+localStorage.getItem('access')
+            },
+          success:function(e){
+              $('#id').val(e['id'])
+              $('#username').val(e['username'])
+              $('#first_name').val(e['first_name'])
+              $('#last_name').val(e['last_name'])
+              $('#email').val(e['email'])
+            
+          },
+          error:function(e){
+              if(e['statusText']==='Unauthorized'&&e['status']===401){
+                $.ajax({
+                  url:"http://127.0.0.1:8000/api/token/refresh/",
+                  type:"POST",
+                  data:{
+                    "refresh":localStorage.getItem('refresh')
+                  },
+                  success:function(e){
+                    console.log(e['access'])
+                      localStorage.setItem('access',e['access'])
+                  }
+                })
+              }
+          }
+        })
+        // $.ajax({
+        //       url:`http://127.0.0.1:8000/api/${e}/`,
+        //       type:"GET",
+        //       success:function(e){
+                
+        //       }  
+              
+        // });
+
+      }
+      
+      function delData(e){
+        alert(e)
+        $.ajax({
+          url:`http://127.0.0.1:8000/api/${e}/`,
+          type:"DELETE",
+          headers:{
+              "Authorization":"Bearer "+localStorage.getItem('access')
+            },
+          success:function(e){
+            console.log(e)
+            alert('Data Deleted')
+          },
+          error:function(e){
+              console.log(e['statusText'])
+              console.log(e['status'])
+              if(e['statusText']==='Unauthorized'&&e['status']===401){
+                $.ajax({
+                  url:"http://127.0.0.1:8000/api/token/refresh/",
+                  type:"POST",
+                  data:{
+                    "refresh":localStorage.getItem('refresh')
+                  },
+                  success:function(e){
+                    console.log(e['access'])
+                      localStorage.setItem('access',e['access'])
+                  }
+                })
+              }
+            }
+        })
+      }
+    </script>
+   
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>
